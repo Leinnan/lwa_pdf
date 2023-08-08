@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images to PDF Converter</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script>
+// module.exports = {
+//   darkMode: 'class',
+//   // ...
+// }
+tailwind.config = {
+      theme: {
+        extend: {
+            colors: {
+                myorange: '#E66601',
+                mydark: 'rgb(43, 43, 43)',
+                bodyDark: '#1D1F21',
+            }
+        }
+      }
+    }
+    </script>
+</head>
+
+<body class="bg-bodyDark">
+    <div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 items-center">
+        <div class="w-full p-10 rounded-xl z-10 items-center justify-center bg-mydark">
+            <div class="text-center sm:max-w-lg items-center justify-center ml-auto mr-auto">
+                <h2 class="mt-5 text-3xl font-bold text-myorange">
+                    Images to PDF converter
+                </h2>
+                <p class="mt-3 mb-2 text-sm text-gray-400">No ads. Nothing more, nothing less.</p>
+                <div class="flex items-center justify-center w-full">
+                    <div id="loading-indicator"
+                        class="m-4 p-4 text-3xl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+                        Loading...</div>
+                </div>
+                <form id='file-catcher'>
+
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        for="multiple_files">Upload multiple files</label>
+                    <input
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        id="dropzone-file" type="file" multiple>
+
+                    <button type="submit"
+                        class="my-5 w-full flex justify-center bg-myorange text-gray-100 p-4  rounded-full tracking-wide
+                        font-semibold  focus:outline-none focus:shadow-outline hover:bg-myorange shadow-lg cursor-pointer transition ease-in duration-300">
+                        Upload
+                    </button>
+                </form>
+            </div>
+            <iframe id="viewer" class="flex items-center justify-center w-full h-screen"></iframe>
+</div></div>
+            <script type='module'>
+                //import the library to talk to imagemagick
+                import * as Magick from 'https://knicknic.github.io/wasm-imagemagick/magickApi.js';
+                const input = document.querySelector("#dropzone-file");
+                const loading = document.querySelector("#loading-indicator");
+                const fileForm = document.querySelector("#file-catcher");
+                const iframe = document.getElementById("viewer");
+                loading.style.display = "none";
+                iframe.style.display = "none";
+                input.onchange = () => {
+                    const count = input.files.length;
+                    console.log("Selected " + count + " files");
+                }
+
+                const readUploadedFileAsText = (inputFile) => {
+                    const temporaryFileReader = new FileReader();
+
+                    return new Promise((resolve, reject) => {
+                        temporaryFileReader.onerror = () => {
+                            temporaryFileReader.abort();
+                            reject(new DOMException("Problem parsing input file."));
+                        };
+
+                        temporaryFileReader.onload = () => {
+                            resolve(temporaryFileReader.result);
+                        };
+                        temporaryFileReader.readAsArrayBuffer(inputFile);
+                    });
+                };
+
+                async function readFirstFile() {
+                    let file = input.files[0];
+                    console.log("Read started");
+                    let content = await readUploadedFileAsText(file);
+                    console.log("Read ended");
+                    let sourceBytes = new Uint8Array(content);
+                    const files = [{ 'name': 'srcFile.png', 'content': sourceBytes }];
+                    const command = ["convert", "srcFile.png", "-rotate", "90", "-resize", "200%", "out.png"];
+                    console.log("Call started");
+                    let processedFiles = await Magick.Call(files, command);
+                    console.log("Call ended");
+
+                    // response can be multiple files (example split)
+                    // here we know we just have one
+                    let firstOutputImage = processedFiles[0]
+                    rotatedImage.src = URL.createObjectURL(firstOutputImage['blob'])
+                    console.log("created image " + firstOutputImage['name'])
+                }
+
+                async function generatePdf() {
+                    fileForm.style.display = "none";
+                    loading.style.display = "block";
+                    try {
+                        let files = [];
+                        console.log("Read started");
+                        for (let i = 0; i < input.files.length; i++) {
+                            let content = await readUploadedFileAsText(input.files[i]);
+                            let sourceBytes = new Uint8Array(content);
+                            let file = { 'name': input.files[i].name, 'content': sourceBytes };
+                            files.push(file);
+                        }
+                        console.log("Read ended");
+
+                        const command = ["convert", "*", "output.pdf"];
+                        console.log("Call started");
+                        let processedFiles = await Magick.Call(files, command);
+                        console.log("Call ended");
+                        const obj_url = URL.createObjectURL(processedFiles[0]['blob']);
+                        iframe.style.display = "block";
+                        iframe.setAttribute("src", obj_url);
+                        URL.revokeObjectURL(obj_url);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    loading.style.display = "none";
+                    fileForm.style.display = "block";
+                }
+                var fileCatcher = document.getElementById('file-catcher');
+
+                fileCatcher.addEventListener('submit', function (evnt) {
+                    evnt.preventDefault();
+                    // readFirstFile();
+                    generatePdf();
+                }
+
+                );
+            </script>
+
+            <footer class="text-center">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">© 2023 <a
+                            href="https://mevlyshkin.com/" class="hover:underline">Mev Lyshkin™</a>. All Rights
+                        Reserved.
+                    </span>
+            </footer>
+
+</body>
+
+</html>
