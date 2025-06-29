@@ -56,7 +56,11 @@
                         </div>
                     </div>
                     <form id="file-catcher">
-                        <div class="flex items-center justify-center w-full">
+                        <!-- Drop Zone - shown when no files -->
+                        <div
+                            id="drop-zone"
+                            class="flex items-center justify-center w-full"
+                        >
                             <label
                                 for="dropzone-file"
                                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-mydark-lighter border-dashed rounded-lg cursor-pointer bg-mydark-light hover:bg-mydark-lighter hover:border-myorange transition duration-300"
@@ -99,32 +103,58 @@
                             </label>
                         </div>
 
+                        <!-- Add More Files Button - shown when files exist -->
+                        <div
+                            id="add-more-section"
+                            style="display: none"
+                            class="flex items-center justify-center w-full mb-4"
+                        >
+                            <button
+                                type="button"
+                                id="add-more-btn"
+                                class="flex items-center justify-center px-6 py-3 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange hover:text-white transition duration-300 border border-mydark-lightest hover:border-myorange"
+                            >
+                                <svg
+                                    class="w-5 h-5 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
+                                </svg>
+                                Add More Files
+                            </button>
+                        </div>
+
                         <!-- File List Section -->
                         <div
                             id="file-list-container"
                             style="display: none"
                             class="mt-4 mb-4"
                         >
-                            <div class="flex items-center justify-between mb-3">
-                                <h3
-                                    class="text-lg font-medium text-text-primary"
-                                >
-                                    Added Files (drag to reorder):
-                                </h3>
-                                <button
-                                    type="button"
-                                    id="clear-files"
-                                    class="px-4 py-2 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange-dark hover:text-white transition duration-200 border border-mydark-lightest hover:border-myorange-dark"
-                                >
-                                    Clear All Files
-                                </button>
-                            </div>
+                            <h3
+                                class="text-lg font-medium text-text-primary mb-3"
+                            >
+                                Added Files (drag to reorder):
+                            </h3>
                             <ul
                                 id="file-list"
                                 class="space-y-2 max-h-60 overflow-y-auto"
                             >
                                 <!-- File items will be populated here -->
                             </ul>
+                            <button
+                                type="button"
+                                id="clear-files"
+                                class="mt-3 px-4 py-2 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange-dark hover:text-white transition duration-200 border border-mydark-lightest hover:border-myorange-dark"
+                            >
+                                Clear All Files
+                            </button>
                         </div>
 
                         <button
@@ -205,6 +235,9 @@
             const fileForm = document.querySelector("#file-catcher");
             const previewSection = document.querySelector("#pdf-viewer");
             const iframe = document.getElementById("viewer");
+            const dropZone = document.getElementById("drop-zone");
+            const addMoreSection = document.getElementById("add-more-section");
+            const addMoreBtn = document.getElementById("add-more-btn");
             const fileListContainer = document.getElementById(
                 "file-list-container",
             );
@@ -253,6 +286,9 @@
                 fileList.innerHTML = "";
 
                 if (selectedFiles.length === 0) {
+                    // Show drop zone, hide everything else
+                    dropZone.style.display = "flex";
+                    addMoreSection.style.display = "none";
                     fileListContainer.style.display = "none";
                     submitBtn.style.display = "none";
                     downloadSection.style.display = "none";
@@ -262,6 +298,9 @@
                     return;
                 }
 
+                // Hide drop zone, show add more button and file list
+                dropZone.style.display = "none";
+                addMoreSection.style.display = "flex";
                 fileListContainer.style.display = "block";
                 submitBtn.style.display = "block";
 
@@ -355,8 +394,17 @@
 
             // Handle file input change
             input.addEventListener("change", function (e) {
-                selectedFiles = Array.from(e.target.files);
+                // Add new files to existing selection instead of replacing
+                const newFiles = Array.from(e.target.files);
+                selectedFiles = [...selectedFiles, ...newFiles];
                 displayFileList();
+                // Clear the input so same files can be added again if needed
+                e.target.value = "";
+            });
+
+            // Add More Files button
+            addMoreBtn.addEventListener("click", function () {
+                input.click();
             });
 
             // Clear all files
