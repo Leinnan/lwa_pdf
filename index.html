@@ -141,7 +141,7 @@
                             <h3
                                 class="text-lg font-medium text-text-primary mb-3"
                             >
-                                Selected Files (drag to reorder):
+                                Added Files
                             </h3>
                             <ul
                                 id="file-list"
@@ -204,7 +204,7 @@
                     class="text-text-primary items-center justify-center"
                 >
                     <details
-                        class="mt-6 bg-mydark-light rounded-lg border border-mydark-lighter hidden sm:block"
+                        class="mt-6 bg-mydark-light rounded-lg border border-mydark-lighter sm:block"
                     >
                         <summary
                             class="cursor-pointer p-4 text-lg font-medium text-text-primary hover:bg-mydark-lighter hover:text-myorange rounded-lg transition duration-200 select-none"
@@ -308,6 +308,24 @@
                 }
             }
 
+            function moveFileUp(index) {
+                if (index > 0) {
+                    const file = selectedFiles[index];
+                    selectedFiles.splice(index, 1);
+                    selectedFiles.splice(index - 1, 0, file);
+                    displayFileList();
+                }
+            }
+
+            function moveFileDown(index) {
+                if (index < selectedFiles.length - 1) {
+                    const file = selectedFiles[index];
+                    selectedFiles.splice(index, 1);
+                    selectedFiles.splice(index + 1, 0, file);
+                    displayFileList();
+                }
+            }
+
             async function displayFileList() {
                 fileForm.style.display = "block";
                 fileList.innerHTML = "";
@@ -338,6 +356,42 @@
                         "flex items-center justify-between p-4 bg-mydark-light rounded-lg cursor-move hover:bg-mydark-lighter transition duration-200 border border-mydark-lighter hover:border-myorange";
                     li.draggable = true;
                     li.dataset.index = index;
+
+                    // Create up/down buttons container
+                    const buttonsContainer = document.createElement("div");
+                    buttonsContainer.className = "flex flex-row space-x-1 mr-3";
+
+                    // Up button
+                    if (index !== 0) {
+                        const upButton = document.createElement("button");
+                        upButton.type = "button";
+                        upButton.className = `move-up p-2 rounded hover:bg-myorange transition duration-200 ${index === 0 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
+                        upButton.dataset.index = index;
+                        upButton.disabled = index === 0;
+                        upButton.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                    `;
+                        buttonsContainer.appendChild(upButton);
+                    }
+
+                    // Down button
+                    if (index !== selectedFiles.length - 1) {
+                        const downButton = document.createElement("button");
+                        downButton.type = "button";
+                        downButton.className = `move-down p-2 rounded hover:bg-myorange transition duration-200 ${index === selectedFiles.length - 1 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
+                        downButton.dataset.index = index;
+                        downButton.disabled =
+                            index === selectedFiles.length - 1;
+                        downButton.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    `;
+
+                        buttonsContainer.appendChild(downButton);
+                    }
 
                     // Create preview image
                     const preview = await createImagePreview(file);
@@ -374,6 +428,7 @@
                     `;
 
                     // Assemble the list item
+                    li.appendChild(buttonsContainer);
                     li.appendChild(previewContainer);
                     li.appendChild(fileInfoContainer);
                     li.appendChild(actionsContainer);
@@ -383,6 +438,7 @@
 
                 addDragAndDropListeners();
                 addRemoveFileListeners();
+                addMoveButtonListeners();
             }
 
             function addDragAndDropListeners() {
@@ -404,6 +460,32 @@
                         const index = parseInt(button.dataset.index);
                         selectedFiles.splice(index, 1);
                         displayFileList();
+                    });
+                });
+            }
+
+            function addMoveButtonListeners() {
+                // Up buttons
+                const upButtons = fileList.querySelectorAll(".move-up");
+                upButtons.forEach((button) => {
+                    button.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        if (!button.disabled) {
+                            const index = parseInt(button.dataset.index);
+                            moveFileUp(index);
+                        }
+                    });
+                });
+
+                // Down buttons
+                const downButtons = fileList.querySelectorAll(".move-down");
+                downButtons.forEach((button) => {
+                    button.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        if (!button.disabled) {
+                            const index = parseInt(button.dataset.index);
+                            moveFileDown(index);
+                        }
                     });
                 });
             }
