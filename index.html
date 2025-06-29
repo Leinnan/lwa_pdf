@@ -1,132 +1,456 @@
 <!doctype html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Images to PDF Converter</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            myorange: "#E66601",
+                            mydark: "rgb(43, 43, 43)",
+                            bodyDark: "#1D1F21",
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Images to PDF Converter</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-    <script>
-// module.exports = {
-//   darkMode: 'class',
-//   // ...
-// }
-tailwind.config = {
-      theme: {
-        extend: {
-            colors: {
-                myorange: '#E66601',
-                mydark: 'rgb(43, 43, 43)',
-                bodyDark: '#1D1F21',
-            }
-        }
-      }
-    }
-    </script>
-</head>
+    <body class="bg-bodyDark">
+        <div
+            class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 items-center"
+        >
+            <div
+                class="w-full p-10 rounded-xl z-10 items-center justify-center bg-mydark"
+            >
+                <div
+                    class="text-center sm:max-w-lg items-center justify-center ml-auto mr-auto"
+                >
+                    <h2 class="mt-5 text-3xl font-bold text-myorange">
+                        Images to PDF converter
+                    </h2>
+                    <p class="mt-3 mb-2 text-sm text-gray-400">
+                        No ads. Nothing more, nothing less.
+                    </p>
+                    <div class="flex items-center justify-center w-full">
+                        <div
+                            id="loading-indicator"
+                            style="display: none"
+                            class="m-4 p-4 text-3xl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
+                        >
+                            Loading...
+                        </div>
+                    </div>
+                    <form id="file-catcher">
+                        <div class="flex items-center justify-center w-full">
+                            <label
+                                for="dropzone-file"
+                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                            >
+                                <div
+                                    class="flex flex-col items-center justify-center pt-5 pb-6"
+                                >
+                                    <svg
+                                        class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 20 16"
+                                    >
+                                        <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                        />
+                                    </svg>
+                                    <p
+                                        class="mb-2 text-sm text-gray-500 dark:text-gray-400"
+                                    >
+                                        <span class="font-semibold"
+                                            >Click to upload</span
+                                        >
+                                        or drag and drop
+                                    </p>
+                                    <p
+                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                    >
+                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    </p>
+                                </div>
+                                <input
+                                    id="dropzone-file"
+                                    type="file"
+                                    class="hidden"
+                                    multiple
+                                />
+                            </label>
+                        </div>
 
-<body class="bg-bodyDark">
-    <div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 items-center">
-        <div class="w-full p-10 rounded-xl z-10 items-center justify-center bg-mydark">
-            <div class="text-center sm:max-w-lg items-center justify-center ml-auto mr-auto">
-                <h2 class="mt-5 text-3xl font-bold text-myorange">
-                    Images to PDF converter
-                </h2>
-                <p class="mt-3 mb-2 text-sm text-gray-400">No ads. Nothing more, nothing less.</p>
-                <div class="flex items-center justify-center w-full">
-                    <div id="loading-indicator" style="display:none;"
-                        class="m-4 p-4 text-3xl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
-                        Loading...</div>
+                        <!-- File List Section -->
+                        <div
+                            id="file-list-container"
+                            style="display: none"
+                            class="mt-4 mb-4"
+                        >
+                            <h3 class="text-lg font-medium text-white mb-3">
+                                Selected Files (drag to reorder):
+                            </h3>
+                            <ul
+                                id="file-list"
+                                class="space-y-2 max-h-60 overflow-y-auto"
+                            >
+                                <!-- File items will be populated here -->
+                            </ul>
+                            <button
+                                type="button"
+                                id="clear-files"
+                                class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200"
+                            >
+                                Clear All Files
+                            </button>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="submit-btn"
+                            style="display: none"
+                            class="my-5 w-full flex justify-center bg-myorange text-gray-100 p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-myorange shadow-lg cursor-pointer transition ease-in duration-300"
+                        >
+                            Convert to PDF
+                        </button>
+                    </form>
+
+                    <!-- Download Button -->
+                    <div
+                        id="download-section"
+                        style="display: none"
+                        class="mt-4"
+                    >
+                        <h3 class="text-xl font-semibold mb-2 text-white">
+                            PDF generated!
+                        </h3>
+                        <button
+                            type="button"
+                            id="download-btn"
+                            class="w-full flex justify-center items-center bg-green-600 text-white p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-green-700 shadow-lg cursor-pointer transition ease-in duration-300"
+                        >
+                            <svg
+                                class="w-5 h-5 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                ></path>
+                            </svg>
+                            Download PDF
+                        </button>
+                    </div>
                 </div>
-                <form id='file-catcher'>
-
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        for="multiple_files">Upload multiple files</label>
-                    <input
-                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                        id="dropzone-file" type="file" multiple>
-
-                    <button type="submit"
-                        class="my-5 w-full flex justify-center bg-myorange text-gray-100 p-4  rounded-full tracking-wide
-                        font-semibold  focus:outline-none focus:shadow-outline hover:bg-myorange shadow-lg cursor-pointer transition ease-in duration-300">
-                        Upload
+                <section
+                    id="pdf-viewer"
+                    class="text-white items-center justify-center"
+                >
+                    <details
+                        class="mt-6 bg-gray-800 rounded-lg border border-gray-700"
+                    >
+                        <summary
+                            class="cursor-pointer p-4 text-lg font-medium text-white hover:bg-gray-700 rounded-lg transition duration-200 select-none"
+                        >
+                            PDF Preview
+                        </summary>
+                        <div class="p-4 pt-0">
+                            <iframe
+                                id="viewer"
+                                class="w-full h-screen rounded-lg border border-gray-600 bg-white"
+                            ></iframe>
+                        </div>
+                    </details>
+                    <button
+                        type="button"
+                        id="new-conversion-btn"
+                        class="mt-3 flex justify-center bg-gray-600 text-white px-4 py-2 rounded-lg tracking-wide font-medium focus:outline-none focus:shadow-outline hover:bg-gray-700 transition ease-in duration-300"
+                    >
+                        Convert New Files
                     </button>
-                </form>
+                </section>
             </div>
-            <iframe id="viewer" class="flex items-center justify-center w-full h-screen"></iframe>
-</div></div>
-            <script type='module'>
-                //import the library to talk to imagemagick
-                import * as Magick from 'https://knicknic.github.io/wasm-imagemagick/magickApi.js';
-                const input = document.querySelector("#dropzone-file");
-                const loading = document.querySelector("#loading-indicator");
-                const fileForm = document.querySelector("#file-catcher");
-                const iframe = document.getElementById("viewer");
-                loading.style.display = "none";
+        </div>
+        <script type="module">
+            //import the library to talk to imagemagick
+            import * as Magick from "https://knicknic.github.io/wasm-imagemagick/magickApi.js";
+            const input = document.querySelector("#dropzone-file");
+            const loading = document.querySelector("#loading-indicator");
+            const fileForm = document.querySelector("#file-catcher");
+            const previewSection = document.querySelector("#pdf-viewer");
+            const iframe = document.getElementById("viewer");
+            const fileListContainer = document.getElementById(
+                "file-list-container",
+            );
+            const fileList = document.getElementById("file-list");
+            const clearFilesBtn = document.getElementById("clear-files");
+            const submitBtn = document.getElementById("submit-btn");
+            const downloadSection = document.getElementById("download-section");
+            const downloadBtn = document.getElementById("download-btn");
+            const newConversionBtn =
+                document.getElementById("new-conversion-btn");
+
+            loading.style.display = "none";
+            previewSection.style.display = "none";
+            iframe.style.display = "none";
+
+            let selectedFiles = [];
+            let currentPdfBlob = null;
+            let currentPdfUrl = null;
+
+            const readUploadedFileAsText = (inputFile) => {
+                const temporaryFileReader = new FileReader();
+
+                return new Promise((resolve, reject) => {
+                    temporaryFileReader.onerror = () => {
+                        temporaryFileReader.abort();
+                        reject(new DOMException("Problem parsing input file."));
+                    };
+
+                    temporaryFileReader.onload = () => {
+                        resolve(temporaryFileReader.result);
+                    };
+                    temporaryFileReader.readAsArrayBuffer(inputFile);
+                });
+            };
+
+            function cleanupPreviousPdf() {
+                if (currentPdfUrl) {
+                    URL.revokeObjectURL(currentPdfUrl);
+                    currentPdfUrl = null;
+                    currentPdfBlob = null;
+                }
+            }
+
+            function displayFileList() {
+                fileForm.style.display = "block";
+                fileList.innerHTML = "";
+
+                if (selectedFiles.length === 0) {
+                    fileListContainer.style.display = "none";
+                    submitBtn.style.display = "none";
+                    downloadSection.style.display = "none";
+                    previewSection.style.display = "none";
+                    iframe.style.display = "none";
+                    cleanupPreviousPdf();
+                    return;
+                }
+
+                fileListContainer.style.display = "block";
+                submitBtn.style.display = "block";
+
+                selectedFiles.forEach((file, index) => {
+                    const li = document.createElement("li");
+                    li.className =
+                        "flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-move hover:bg-gray-600 transition duration-200";
+                    li.draggable = true;
+                    li.dataset.index = index;
+
+                    li.innerHTML = `
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                                </svg>
+                                <span class="text-white text-sm">${file.name}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-gray-400 text-xs mr-3">${(file.size / 1024).toFixed(1)} KB</span>
+                                <button type="button" class="remove-file text-red-400 hover:text-red-300" data-index="${index}">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+
+                    fileList.appendChild(li);
+                });
+
+                addDragAndDropListeners();
+                addRemoveFileListeners();
+            }
+
+            function addDragAndDropListeners() {
+                const listItems = fileList.querySelectorAll("li");
+
+                listItems.forEach((item) => {
+                    item.addEventListener("dragstart", handleDragStart);
+                    item.addEventListener("dragover", handleDragOver);
+                    item.addEventListener("drop", handleDrop);
+                    item.addEventListener("dragend", handleDragEnd);
+                });
+            }
+
+            function addRemoveFileListeners() {
+                const removeButtons = fileList.querySelectorAll(".remove-file");
+                removeButtons.forEach((button) => {
+                    button.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(button.dataset.index);
+                        selectedFiles.splice(index, 1);
+                        displayFileList();
+                    });
+                });
+            }
+
+            let draggedElement = null;
+
+            function handleDragStart(e) {
+                draggedElement = this;
+                this.style.opacity = "0.5";
+            }
+
+            function handleDragOver(e) {
+                e.preventDefault();
+            }
+
+            function handleDrop(e) {
+                e.preventDefault();
+
+                if (this !== draggedElement) {
+                    const draggedIndex = parseInt(draggedElement.dataset.index);
+                    const targetIndex = parseInt(this.dataset.index);
+
+                    // Reorder the files array
+                    const draggedFile = selectedFiles[draggedIndex];
+                    selectedFiles.splice(draggedIndex, 1);
+                    selectedFiles.splice(targetIndex, 0, draggedFile);
+
+                    displayFileList();
+                }
+            }
+
+            function handleDragEnd(e) {
+                this.style.opacity = "";
+                draggedElement = null;
+            }
+
+            // Handle file input change
+            input.addEventListener("change", function (e) {
+                selectedFiles = Array.from(e.target.files);
+                displayFileList();
+            });
+
+            // Clear all files
+            clearFilesBtn.addEventListener("click", function () {
+                selectedFiles = [];
+                input.value = "";
+                displayFileList();
+            });
+
+            // New conversion button
+            newConversionBtn.addEventListener("click", function () {
+                selectedFiles = [];
+                input.value = "";
+                downloadSection.style.display = "none";
+                iframe.style.display = "none";
+                cleanupPreviousPdf();
+                displayFileList();
+            });
+
+            // Download button
+            downloadBtn.addEventListener("click", function () {
+                if (currentPdfBlob && currentPdfUrl) {
+                    const link = document.createElement("a");
+                    link.href = currentPdfUrl;
+                    link.download = "converted-images.pdf";
+
+                    // For mobile compatibility
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+
+            async function generatePdf() {
+                if (selectedFiles.length === 0) {
+                    alert("Please select some files first!");
+                    return;
+                }
+
+                // Clean up any previous PDF
+                cleanupPreviousPdf();
+
+                fileForm.style.display = "none";
+                loading.style.display = "block";
+                downloadSection.style.display = "none";
                 iframe.style.display = "none";
 
-                const readUploadedFileAsText = (inputFile) => {
-                    const temporaryFileReader = new FileReader();
+                try {
+                    let files = [];
+                    console.log("Read started");
 
-                    return new Promise((resolve, reject) => {
-                        temporaryFileReader.onerror = () => {
-                            temporaryFileReader.abort();
-                            reject(new DOMException("Problem parsing input file."));
+                    // Use the reordered selectedFiles array instead of input.files
+                    for (let i = 0; i < selectedFiles.length; i++) {
+                        let content = await readUploadedFileAsText(
+                            selectedFiles[i],
+                        );
+                        let sourceBytes = new Uint8Array(content);
+                        let file = {
+                            name: selectedFiles[i].name,
+                            content: sourceBytes,
                         };
-
-                        temporaryFileReader.onload = () => {
-                            resolve(temporaryFileReader.result);
-                        };
-                        temporaryFileReader.readAsArrayBuffer(inputFile);
-                    });
-                };
-
-                async function generatePdf() {
-                    fileForm.style.display = "none";
-                    loading.style.display = "block";
-                    try {
-                        let files = [];
-                        console.log("Read started");
-                        for (let i = 0; i < input.files.length; i++) {
-                            let content = await readUploadedFileAsText(input.files[i]);
-                            let sourceBytes = new Uint8Array(content);
-                            let file = { 'name': input.files[i].name, 'content': sourceBytes };
-                            files.push(file);
-                        }
-                        console.log("Read ended");
-
-                        const command = ["convert", "*", "output.pdf"];
-                        console.log("Call started");
-                        let processedFiles = await Magick.Call(files, command);
-                        console.log("Call ended");
-                        const obj_url = URL.createObjectURL(processedFiles[0]['blob']);
-                        iframe.style.display = "block";
-                        iframe.setAttribute("src", obj_url);
-                        URL.revokeObjectURL(obj_url);
-                    } catch (error) {
-                        console.error(error);
+                        files.push(file);
                     }
-                    loading.style.display = "none";
-                    fileForm.style.display = "block";
+                    console.log("Read ended");
+
+                    const command = ["convert", "*", "output.pdf"];
+                    console.log("Call started");
+                    let processedFiles = await Magick.Call(files, command);
+                    console.log("Call ended");
+
+                    // Store the blob and create URL for download
+                    currentPdfBlob = processedFiles[0]["blob"];
+                    currentPdfUrl = URL.createObjectURL(currentPdfBlob);
+                    previewSection.style.display = "block";
+                    // Display PDF in iframe
+                    iframe.style.display = "block";
+                    iframe.setAttribute("src", currentPdfUrl);
+
+                    // Show download section
+                    downloadSection.style.display = "block";
+                } catch (error) {
+                    console.error(error);
+                    alert("Error generating PDF: " + error.message);
                 }
-                var fileCatcher = document.getElementById('file-catcher');
+                loading.style.display = "none";
+                fileForm.style.display = "none";
+            }
 
-                fileCatcher.addEventListener('submit', function (evnt) {
-                    evnt.preventDefault();
-                    // readFirstFile();
-                    generatePdf();
-                }
+            var fileCatcher = document.getElementById("file-catcher");
+            fileCatcher.addEventListener("submit", function (evnt) {
+                evnt.preventDefault();
+                generatePdf();
+            });
 
-                );
-            </script>
+            // Cleanup on page unload
+            window.addEventListener("beforeunload", function () {
+                cleanupPreviousPdf();
+            });
+        </script>
 
-            <footer class="text-center">
-                    <span class="text-sm text-gray-500 dark:text-gray-400">© 2023 <a
-                            href="https://mevlyshkin.com/" class="hover:underline">Mev Lyshkin™</a>. All Rights
-                        Reserved.
-                    </span>
-            </footer>
-
-</body>
-
+        <footer class="text-center">
+            <span class="text-sm text-gray-500 dark:text-gray-400"
+                >© 2023
+                <a href="https://mevlyshkin.com/" class="hover:underline"
+                    >Mev Lyshkin™</a
+                >. All Rights Reserved.
+            </span>
+        </footer>
+    </body>
 </html>
