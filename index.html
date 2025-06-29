@@ -11,8 +11,18 @@
                     extend: {
                         colors: {
                             myorange: "#E66601",
+                            "myorange-light": "#FF7A1A",
+                            "myorange-dark": "#CC5500",
+                            "myorange-darker": "#B34700",
                             mydark: "rgb(43, 43, 43)",
+                            "mydark-light": "rgb(55, 55, 55)",
+                            "mydark-lighter": "rgb(70, 70, 70)",
+                            "mydark-lightest": "rgb(85, 85, 85)",
                             bodyDark: "#1D1F21",
+                            "text-primary": "#F5F5F5",
+                            "text-secondary": "#D1D1D1",
+                            "text-muted": "#A0A0A0",
+                            "text-subtle": "#808080",
                         },
                     },
                 },
@@ -33,14 +43,14 @@
                     <h2 class="mt-5 text-3xl font-bold text-myorange">
                         Images to PDF converter
                     </h2>
-                    <p class="mt-3 mb-2 text-sm text-gray-400">
+                    <p class="mt-3 mb-2 text-sm text-text-secondary">
                         No ads. Nothing more, nothing less.
                     </p>
                     <div class="flex items-center justify-center w-full">
                         <div
                             id="loading-indicator"
                             style="display: none"
-                            class="m-4 p-4 text-3xl font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
+                            class="m-4 p-4 text-lg font-medium leading-none text-center text-myorange bg-mydark-light rounded-full animate-pulse border-2 border-myorange"
                         >
                             Loading...
                         </div>
@@ -49,13 +59,13 @@
                         <div class="flex items-center justify-center w-full">
                             <label
                                 for="dropzone-file"
-                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-mydark-lighter border-dashed rounded-lg cursor-pointer bg-mydark-light hover:bg-mydark-lighter hover:border-myorange transition duration-300"
                             >
                                 <div
                                     class="flex flex-col items-center justify-center pt-5 pb-6"
                                 >
                                     <svg
-                                        class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                        class="w-8 h-8 mb-4 text-text-muted"
                                         aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -69,18 +79,15 @@
                                             d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                         />
                                     </svg>
-                                    <p
-                                        class="mb-2 text-sm text-gray-500 dark:text-gray-400"
-                                    >
-                                        <span class="font-semibold"
+                                    <p class="mb-2 text-sm text-text-secondary">
+                                        <span
+                                            class="font-semibold text-myorange"
                                             >Click to upload</span
                                         >
                                         or drag and drop
                                     </p>
-                                    <p
-                                        class="text-xs text-gray-500 dark:text-gray-400"
-                                    >
-                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                    <p class="text-xs text-text-muted">
+                                        image files
                                     </p>
                                 </div>
                                 <input
@@ -98,29 +105,33 @@
                             style="display: none"
                             class="mt-4 mb-4"
                         >
-                            <h3 class="text-lg font-medium text-white mb-3">
-                                Selected Files (drag to reorder):
-                            </h3>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3
+                                    class="text-lg font-medium text-text-primary"
+                                >
+                                    Added Files (drag to reorder):
+                                </h3>
+                                <button
+                                    type="button"
+                                    id="clear-files"
+                                    class="px-4 py-2 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange-dark hover:text-white transition duration-200 border border-mydark-lightest hover:border-myorange-dark"
+                                >
+                                    Clear All Files
+                                </button>
+                            </div>
                             <ul
                                 id="file-list"
                                 class="space-y-2 max-h-60 overflow-y-auto"
                             >
                                 <!-- File items will be populated here -->
                             </ul>
-                            <button
-                                type="button"
-                                id="clear-files"
-                                class="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200"
-                            >
-                                Clear All Files
-                            </button>
                         </div>
 
                         <button
                             type="submit"
                             id="submit-btn"
                             style="display: none"
-                            class="my-5 w-full flex justify-center bg-myorange text-gray-100 p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-myorange shadow-lg cursor-pointer transition ease-in duration-300"
+                            class="my-5 w-full flex justify-center bg-myorange text-white p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:ring-2 focus:ring-myorange-light hover:bg-myorange-light shadow-lg cursor-pointer transition ease-in duration-300"
                         >
                             Convert to PDF
                         </button>
@@ -132,13 +143,13 @@
                         style="display: none"
                         class="mt-4"
                     >
-                        <h3 class="text-xl font-semibold mb-2 text-white">
+                        <h3 class="text-xl font-semibold mb-2 text-myorange">
                             PDF generated!
                         </h3>
                         <button
                             type="button"
                             id="download-btn"
-                            class="w-full flex justify-center items-center bg-green-600 text-white p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:shadow-outline hover:bg-green-700 shadow-lg cursor-pointer transition ease-in duration-300"
+                            class="w-full flex justify-center items-center bg-myorange text-white p-4 rounded-full tracking-wide font-semibold focus:outline-none focus:ring-2 focus:ring-myorange-light hover:bg-myorange-light shadow-lg cursor-pointer transition ease-in duration-300"
                         >
                             <svg
                                 class="w-5 h-5 mr-2"
@@ -159,27 +170,27 @@
                 </div>
                 <section
                     id="pdf-viewer"
-                    class="text-white items-center justify-center"
+                    class="text-text-primary items-center justify-center"
                 >
                     <details
-                        class="mt-6 bg-gray-800 rounded-lg border border-gray-700"
+                        class="mt-6 bg-mydark-light rounded-lg border border-mydark-lighter"
                     >
                         <summary
-                            class="cursor-pointer p-4 text-lg font-medium text-white hover:bg-gray-700 rounded-lg transition duration-200 select-none"
+                            class="cursor-pointer p-4 text-lg font-medium text-text-primary hover:bg-mydark-lighter hover:text-myorange rounded-lg transition duration-200 select-none"
                         >
                             PDF Preview
                         </summary>
                         <div class="p-4 pt-0">
                             <iframe
                                 id="viewer"
-                                class="w-full h-screen rounded-lg border border-gray-600 bg-white"
+                                class="w-full h-screen rounded-lg border border-mydark-lightest bg-white"
                             ></iframe>
                         </div>
                     </details>
                     <button
                         type="button"
                         id="new-conversion-btn"
-                        class="mt-3 flex justify-center bg-gray-600 text-white px-4 py-2 rounded-lg tracking-wide font-medium focus:outline-none focus:shadow-outline hover:bg-gray-700 transition ease-in duration-300"
+                        class="mt-3 flex justify-center bg-mydark-lighter text-text-primary px-4 py-2 rounded-lg tracking-wide font-medium focus:outline-none focus:ring-2 focus:ring-myorange hover:bg-myorange-dark hover:text-white transition ease-in duration-300 border border-mydark-lightest hover:border-myorange-dark"
                     >
                         Convert New Files
                     </button>
@@ -257,20 +268,20 @@
                 selectedFiles.forEach((file, index) => {
                     const li = document.createElement("li");
                     li.className =
-                        "flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-move hover:bg-gray-600 transition duration-200";
+                        "flex items-center justify-between p-3 bg-mydark-light rounded-lg cursor-move hover:bg-mydark-lighter transition duration-200 border border-mydark-lighter hover:border-myorange";
                     li.draggable = true;
                     li.dataset.index = index;
 
                     li.innerHTML = `
                             <div class="flex items-center">
-                                <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-text-muted mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
                                 </svg>
-                                <span class="text-white text-sm">${file.name}</span>
+                                <span class="text-text-primary text-sm">${file.name}</span>
                             </div>
                             <div class="flex items-center">
-                                <span class="text-gray-400 text-xs mr-3">${(file.size / 1024).toFixed(1)} KB</span>
-                                <button type="button" class="remove-file text-red-400 hover:text-red-300" data-index="${index}">
+                                <span class="text-text-secondary text-xs mr-3">${(file.size / 1024).toFixed(1)} KB</span>
+                                <button type="button" class="remove-file text-text-muted hover:text-myorange transition duration-200" data-index="${index}">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -313,6 +324,7 @@
             function handleDragStart(e) {
                 draggedElement = this;
                 this.style.opacity = "0.5";
+                this.style.borderColor = "#E66601";
             }
 
             function handleDragOver(e) {
@@ -337,6 +349,7 @@
 
             function handleDragEnd(e) {
                 this.style.opacity = "";
+                this.style.borderColor = "";
                 draggedElement = null;
             }
 
@@ -445,9 +458,11 @@
         </script>
 
         <footer class="text-center">
-            <span class="text-sm text-gray-500 dark:text-gray-400"
+            <span class="text-sm text-text-subtle"
                 >© 2023
-                <a href="https://mevlyshkin.com/" class="hover:underline"
+                <a
+                    href="https://mevlyshkin.com/"
+                    class="hover:underline hover:text-myorange transition duration-200"
                     >Mev Lyshkin™</a
                 >. All Rights Reserved.
             </span>
