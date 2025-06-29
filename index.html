@@ -32,20 +32,18 @@
 
     <body class="bg-bodyDark">
         <div
-            class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 items-center"
+            class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
         >
-            <div
-                class="w-full p-10 rounded-xl z-10 items-center justify-center bg-mydark"
-            >
-                <div
-                    class="text-center sm:max-w-lg items-center justify-center ml-auto mr-auto"
-                >
+            <div class="w-full p-10 rounded-xl z-10 bg-mydark">
+                <div class="text-center sm:max-w-lg mx-auto">
                     <h2 class="mt-5 text-3xl font-bold text-myorange">
                         Images to PDF converter
                     </h2>
                     <p class="mt-3 mb-2 text-sm text-text-secondary">
                         No ads. Nothing more, nothing less.
                     </p>
+
+                    <!-- Loading Indicator -->
                     <div class="flex items-center justify-center w-full">
                         <div
                             id="loading-indicator"
@@ -55,8 +53,9 @@
                             Loading...
                         </div>
                     </div>
+
                     <form id="file-catcher">
-                        <!-- Drop Zone - shown when no files -->
+                        <!-- Drop Zone -->
                         <div
                             id="drop-zone"
                             class="flex items-center justify-center w-full"
@@ -70,9 +69,8 @@
                                 >
                                     <svg
                                         class="w-8 h-8 mb-4 text-text-muted"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
+                                        stroke="currentColor"
                                         viewBox="0 0 20 16"
                                     >
                                         <path
@@ -104,33 +102,12 @@
                             </label>
                         </div>
 
-                        <!-- Add More Files Button - shown when files exist -->
+                        <!-- Add More Files Button -->
                         <div
                             id="add-more-section"
                             style="display: none"
                             class="flex items-center justify-center w-full mb-4"
-                        >
-                            <button
-                                type="button"
-                                id="add-more-btn"
-                                class="flex items-center justify-center px-6 py-3 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange hover:text-white transition duration-300 border border-mydark-lightest hover:border-myorange"
-                            >
-                                <svg
-                                    class="w-5 h-5 mr-2"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                    />
-                                </svg>
-                                Add More Files
-                            </button>
-                        </div>
+                        ></div>
 
                         <!-- File List Section -->
                         <div
@@ -138,26 +115,49 @@
                             style="display: none"
                             class="mt-4 mb-4"
                         >
-                            <h3
-                                class="text-lg font-medium text-text-primary mb-3"
-                            >
-                                Added Files
-                            </h3>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3
+                                    class="text-lg font-medium text-text-primary"
+                                >
+                                    Added files
+                                </h3>
+                                <button
+                                    type="button"
+                                    id="add-more-btn"
+                                    class="flex items-center justify-center px-4 py-2 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange hover:text-white transition duration-300 border border-mydark-lightest hover:border-myorange"
+                                >
+                                    <svg
+                                        class="w-5 h-5 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
+                                    </svg>
+                                    Add More Files
+                                </button>
+                                <!-- <button
+                                    type="button"
+                                    id="clear-files"
+                                    class="px-4 py-2 bg-transparent text-text-primary rounded-lg hover:bg-myorange-dark hover:text-white transition duration-200 border border-mydark-lightest hover:border-myorange-dark"
+                                >
+                                    Remove All Files
+                                </button> -->
+                            </div>
                             <ul
                                 id="file-list"
-                                class="space-y-3 max-h-96 overflow-y-auto"
+                                class="space-y-3 max-h-96 overflow-y-auto bg-mydark-lighter rounded-lg p-4 border border-mydark-lightest"
                             >
                                 <!-- File items will be populated here -->
                             </ul>
-                            <button
-                                type="button"
-                                id="clear-files"
-                                class="mt-3 px-4 py-2 bg-mydark-lighter text-text-primary rounded-lg hover:bg-myorange-dark hover:text-white transition duration-200 border border-mydark-lightest hover:border-myorange-dark"
-                            >
-                                Clear All Files
-                            </button>
                         </div>
 
+                        <!-- Convert Button -->
                         <button
                             type="submit"
                             id="submit-btn"
@@ -168,7 +168,7 @@
                         </button>
                     </form>
 
-                    <!-- Download Button -->
+                    <!-- Download Section -->
                     <div
                         id="download-section"
                         style="display: none"
@@ -193,18 +193,21 @@
                                     stroke-linejoin="round"
                                     stroke-width="2"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                                ></path>
+                                />
                             </svg>
                             Download PDF
                         </button>
                     </div>
                 </div>
+
+                <!-- PDF Viewer Section -->
                 <section
                     id="pdf-viewer"
-                    class="text-text-primary items-center justify-center"
+                    class="text-text-primary"
+                    style="display: none"
                 >
                     <details
-                        class="mt-6 bg-mydark-light rounded-lg border border-mydark-lighter sm:block"
+                        class="mt-6 bg-mydark-light rounded-lg border border-mydark-lighter"
                     >
                         <summary
                             class="cursor-pointer p-4 text-lg font-medium text-text-primary hover:bg-mydark-lighter hover:text-myorange rounded-lg transition duration-200 select-none"
@@ -228,39 +231,49 @@
                 </section>
             </div>
         </div>
+
         <script type="module">
-            //import the library to talk to imagemagick
+            // Import ImageMagick library
             import * as Magick from "https://knicknic.github.io/wasm-imagemagick/magickApi.js";
-            const input = document.querySelector("#dropzone-file");
-            const loading = document.querySelector("#loading-indicator");
-            const fileForm = document.querySelector("#file-catcher");
-            const previewSection = document.querySelector("#pdf-viewer");
-            const iframe = document.getElementById("viewer");
-            const dropZone = document.getElementById("drop-zone");
-            const addMoreSection = document.getElementById("add-more-section");
-            const addMoreBtn = document.getElementById("add-more-btn");
-            const fileListContainer = document.getElementById(
-                "file-list-container",
-            );
-            const fileList = document.getElementById("file-list");
-            const clearFilesBtn = document.getElementById("clear-files");
-            const submitBtn = document.getElementById("submit-btn");
-            const downloadSection = document.getElementById("download-section");
-            const downloadBtn = document.getElementById("download-btn");
-            const newConversionBtn =
-                document.getElementById("new-conversion-btn");
 
-            loading.style.display = "none";
-            previewSection.style.display = "none";
-            iframe.style.display = "none";
+            // DOM Elements
+            const elements = {
+                input: document.querySelector("#dropzone-file"),
+                loading: document.querySelector("#loading-indicator"),
+                fileForm: document.querySelector("#file-catcher"),
+                previewSection: document.querySelector("#pdf-viewer"),
+                iframe: document.getElementById("viewer"),
+                dropZone: document.getElementById("drop-zone"),
+                addMoreSection: document.getElementById("add-more-section"),
+                addMoreBtn: document.getElementById("add-more-btn"),
+                fileListContainer: document.getElementById(
+                    "file-list-container",
+                ),
+                fileList: document.getElementById("file-list"),
+                // clearFilesBtn: document.getElementById("clear-files"),
+                submitBtn: document.getElementById("submit-btn"),
+                downloadSection: document.getElementById("download-section"),
+                downloadBtn: document.getElementById("download-btn"),
+                newConversionBtn: document.getElementById("new-conversion-btn"),
+            };
 
+            // Application State
             let selectedFiles = [];
             let currentPdfBlob = null;
             let currentPdfUrl = null;
+            let imagePreviewCache = new Map();
+            let draggedElement = null;
 
-            const readUploadedFileAsText = (inputFile) => {
+            // Initialize UI
+            elements.loading.style.display = "none";
+            elements.previewSection.style.display = "none";
+
+            // Utility Functions
+            const getFileKey = (file) =>
+                `${file.name}_${file.size}_${file.lastModified}`;
+
+            const readFileAsArrayBuffer = (file) => {
                 const temporaryFileReader = new FileReader();
-
                 return new Promise((resolve, reject) => {
                     temporaryFileReader.onerror = () => {
                         temporaryFileReader.abort();
@@ -270,20 +283,35 @@
                     temporaryFileReader.onload = () => {
                         resolve(temporaryFileReader.result);
                     };
-                    temporaryFileReader.readAsArrayBuffer(inputFile);
+                    temporaryFileReader.readAsArrayBuffer(file);
                 });
             };
 
             const createImagePreview = (file) => {
+                const fileKey = getFileKey(file);
+
+                // Return cached preview if available
+                if (imagePreviewCache.has(fileKey)) {
+                    return Promise.resolve(
+                        imagePreviewCache.get(fileKey).cloneNode(true),
+                    );
+                }
+
                 return new Promise((resolve) => {
                     const reader = new FileReader();
+                    const fileKey = getFileKey(file);
                     reader.onload = (e) => {
                         const img = document.createElement("img");
                         img.src = e.target.result;
                         img.className =
                             "w-16 h-16 object-cover rounded-lg border border-mydark-lightest";
+
+                        img.onload = () => {
+                            imagePreviewCache.set(fileKey, img);
+                            resolve(img.cloneNode(true));
+                        };
+
                         img.onerror = () => {
-                            // If image fails to load, create a placeholder
                             const placeholder = document.createElement("div");
                             placeholder.className =
                                 "w-16 h-16 bg-mydark-lighter rounded-lg border border-mydark-lightest flex items-center justify-center";
@@ -292,359 +320,335 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
                             `;
-                            resolve(placeholder);
+                            imagePreviewCache.set(fileKey, placeholder);
+                            resolve(placeholder.cloneNode(true));
                         };
-                        img.onload = () => resolve(img);
                     };
                     reader.readAsDataURL(file);
                 });
             };
 
-            function cleanupPreviousPdf() {
+            const cleanupPreviousPdf = () => {
                 if (currentPdfUrl) {
                     URL.revokeObjectURL(currentPdfUrl);
                     currentPdfUrl = null;
                     currentPdfBlob = null;
                 }
-            }
+            };
 
-            function moveFileUp(index) {
-                if (index > 0) {
-                    const file = selectedFiles[index];
-                    selectedFiles.splice(index, 1);
-                    selectedFiles.splice(index - 1, 0, file);
+            const cleanupPreviewCache = () => {
+                const currentFileKeys = new Set(selectedFiles.map(getFileKey));
+                for (const [key] of imagePreviewCache) {
+                    if (!currentFileKeys.has(key)) {
+                        imagePreviewCache.delete(key);
+                    }
+                }
+            };
+
+            // File Management Functions
+            const moveFile = (fromIndex, toIndex) => {
+                if (toIndex >= 0 && toIndex < selectedFiles.length) {
+                    const file = selectedFiles.splice(fromIndex, 1)[0];
+                    selectedFiles.splice(toIndex, 0, file);
                     displayFileList();
                 }
-            }
+            };
 
-            function moveFileDown(index) {
-                if (index < selectedFiles.length - 1) {
-                    const file = selectedFiles[index];
-                    selectedFiles.splice(index, 1);
-                    selectedFiles.splice(index + 1, 0, file);
-                    displayFileList();
+            const createOrGetFileListItem = async (file, index) => {
+                var key = getFileKey(file);
+                var foundLi = document.querySelector(
+                    'li[data-file="' + key + '"]',
+                );
+                if (foundLi) {
+                    foundLi.dataset.index = index;
+                    return foundLi;
                 }
-            }
+                const li = document.createElement("li");
+                li.dataset.file = key;
+                li.className =
+                    "flex items-center justify-between p-4 bg-mydark-light rounded-lg cursor-move hover:bg-mydark-lighter transition duration-200 border border-mydark-lighter hover:border-myorange";
+                li.draggable = true;
+                li.dataset.index = index;
 
-            async function displayFileList() {
-                fileForm.style.display = "block";
-                fileList.innerHTML = "";
+                // Movement buttons
+                const buttonsContainer = document.createElement("div");
+                buttonsContainer.className = "flex flex-col space-y-1 mr-3";
+
+                const upButton = document.createElement("button");
+                upButton.type = "button";
+                upButton.className = `move-up p-1 rounded hover:bg-myorange transition duration-200 ${index === 0 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
+                upButton.disabled = index === 0;
+                upButton.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>`;
+
+                const downButton = document.createElement("button");
+                downButton.type = "button";
+                downButton.className = `move-down p-1 rounded hover:bg-myorange transition duration-200 ${index === selectedFiles.length - 1 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
+                downButton.disabled = index === selectedFiles.length - 1;
+                downButton.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>`;
+
+                buttonsContainer.appendChild(upButton);
+                buttonsContainer.appendChild(downButton);
+
+                // Preview image
+                const preview = await createImagePreview(file);
+                const previewContainer = document.createElement("div");
+                previewContainer.className = "mr-4 flex-shrink-0";
+                previewContainer.appendChild(preview);
+
+                // File info
+                const fileInfoContainer = document.createElement("div");
+                fileInfoContainer.className =
+                    "flex items-center flex-grow min-w-0";
+                fileInfoContainer.innerHTML = `
+                    <div class="flex flex-col min-w-0 flex-grow">
+                        <span class="text-text-primary text-sm font-medium truncate">${file.name}</span>
+                        <span class="text-text-secondary text-xs">${(file.size / 1024).toFixed(1)} KB</span>
+                    </div>
+                `;
+
+                // Actions (drag handle and remove button)
+                const actionsContainer = document.createElement("div");
+                actionsContainer.className = "flex items-center space-x-2 ml-4";
+                actionsContainer.innerHTML = `
+                    <svg class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                    </svg>
+                    <button type="button" class="remove-file text-text-muted hover:text-myorange transition duration-200 p-1" data-index="${index}">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+
+                li.appendChild(buttonsContainer);
+                li.appendChild(previewContainer);
+                li.appendChild(fileInfoContainer);
+                li.appendChild(actionsContainer);
+
+                return li;
+            };
+
+            const displayFileList = async () => {
+                elements.fileForm.style.display = "block";
 
                 if (selectedFiles.length === 0) {
                     // Show drop zone, hide everything else
-                    dropZone.style.display = "flex";
-                    addMoreSection.style.display = "none";
-                    fileListContainer.style.display = "none";
-                    submitBtn.style.display = "none";
-                    downloadSection.style.display = "none";
-                    previewSection.style.display = "none";
-                    iframe.style.display = "none";
+                    elements.dropZone.style.display = "flex";
+                    elements.addMoreSection.style.display = "none";
+                    elements.fileListContainer.style.display = "none";
+                    elements.submitBtn.style.display = "none";
+                    elements.downloadSection.style.display = "none";
+                    elements.previewSection.style.display = "none";
+                    elements.fileList.innerHTML = "";
                     cleanupPreviousPdf();
+                    imagePreviewCache.clear();
                     return;
                 }
 
-                // Hide drop zone, show add more button and file list
-                dropZone.style.display = "none";
-                addMoreSection.style.display = "flex";
-                fileListContainer.style.display = "block";
-                submitBtn.style.display = "block";
+                // Clean up unused cache entries
+                cleanupPreviewCache();
 
-                for (let index = 0; index < selectedFiles.length; index++) {
-                    const file = selectedFiles[index];
-                    const li = document.createElement("li");
-                    li.className =
-                        "flex items-center justify-between p-4 bg-mydark-light rounded-lg cursor-move hover:bg-mydark-lighter transition duration-200 border border-mydark-lighter hover:border-myorange";
-                    li.draggable = true;
-                    li.dataset.index = index;
+                // Hide drop zone, show file management UI
+                elements.dropZone.style.display = "none";
+                elements.addMoreSection.style.display = "flex";
+                elements.fileListContainer.style.display = "block";
+                elements.submitBtn.style.display = "block";
 
-                    // Create up/down buttons container
-                    const buttonsContainer = document.createElement("div");
-                    buttonsContainer.className = "flex flex-row space-x-1 mr-3";
-
-                    // Up button
-                    if (index !== 0) {
-                        const upButton = document.createElement("button");
-                        upButton.type = "button";
-                        upButton.className = `move-up p-2 rounded hover:bg-myorange transition duration-200 ${index === 0 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
-                        upButton.dataset.index = index;
-                        upButton.disabled = index === 0;
-                        upButton.innerHTML = `
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7"></path>
-                        </svg>
-                    `;
-                        buttonsContainer.appendChild(upButton);
+                const existingListItems =
+                    elements.fileList.querySelectorAll("li");
+                const filesMapping = selectedFiles.map((file) =>
+                    getFileKey(file),
+                );
+                for (let i = existingListItems.length - 1; i >= 0; i--) {
+                    const elKey = existingListItems[i].dataset.file;
+                    const fileIndex = filesMapping.indexOf(
+                        (key) => key === elKey,
+                    );
+                    if (fileIndex === -1) {
+                        existingListItems[i].remove();
+                        continue;
                     }
-
-                    // Down button
-                    if (index !== selectedFiles.length - 1) {
-                        const downButton = document.createElement("button");
-                        downButton.type = "button";
-                        downButton.className = `move-down p-2 rounded hover:bg-myorange transition duration-200 ${index === selectedFiles.length - 1 ? "text-text-subtle cursor-not-allowed" : "text-text-muted hover:text-white"}`;
-                        downButton.dataset.index = index;
-                        downButton.disabled =
-                            index === selectedFiles.length - 1;
-                        downButton.innerHTML = `
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    `;
-
-                        buttonsContainer.appendChild(downButton);
-                    }
-
-                    // Create preview image
-                    const preview = await createImagePreview(file);
-
-                    // Create a container for the preview
-                    const previewContainer = document.createElement("div");
-                    previewContainer.className = "mr-4 flex-shrink-0";
-                    previewContainer.appendChild(preview);
-
-                    // Create file info container
-                    const fileInfoContainer = document.createElement("div");
-                    fileInfoContainer.className =
-                        "flex items-center flex-grow min-w-0";
-                    fileInfoContainer.innerHTML = `
-                        <div class="flex flex-col min-w-0 flex-grow">
-                            <span class="text-text-primary text-sm font-medium truncate">${file.name}</span>
-                            <span class="text-text-secondary text-xs">${(file.size / 1024).toFixed(1)} KB</span>
-                        </div>
-                    `;
-
-                    // Create drag handle and remove button container
-                    const actionsContainer = document.createElement("div");
-                    actionsContainer.className =
-                        "flex items-center space-x-2 ml-4";
-                    actionsContainer.innerHTML = `
-                        <svg class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
-                        </svg>
-                        <button type="button" class="remove-file text-text-muted hover:text-myorange transition duration-200 p-1" data-index="${index}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    `;
-
-                    // Assemble the list item
-                    li.appendChild(buttonsContainer);
-                    li.appendChild(previewContainer);
-                    li.appendChild(fileInfoContainer);
-                    li.appendChild(actionsContainer);
-
-                    fileList.appendChild(li);
+                    filesMapping[i].dataset.index = fileIndex;
                 }
+                const fragment = document.createDocumentFragment();
 
-                addDragAndDropListeners();
-                addRemoveFileListeners();
-                addMoveButtonListeners();
-            }
+                const listItemPromises = selectedFiles.map((file, index) =>
+                    createOrGetFileListItem(file, index),
+                );
+                const listItems = await Promise.all(listItemPromises);
 
-            function addDragAndDropListeners() {
-                const listItems = fileList.querySelectorAll("li");
+                listItems.forEach((li) => fragment.appendChild(li));
+                elements.fileList.appendChild(fragment);
+                // Add event listeners
+                addEventListeners();
+            };
 
-                listItems.forEach((item) => {
+            const addEventListeners = () => {
+                // Drag and drop listeners
+                elements.fileList.querySelectorAll("li").forEach((item) => {
                     item.addEventListener("dragstart", handleDragStart);
                     item.addEventListener("dragover", handleDragOver);
                     item.addEventListener("drop", handleDrop);
                     item.addEventListener("dragend", handleDragEnd);
                 });
-            }
 
-            function addRemoveFileListeners() {
-                const removeButtons = fileList.querySelectorAll(".remove-file");
-                removeButtons.forEach((button) => {
-                    button.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        const index = parseInt(button.dataset.index);
-                        selectedFiles.splice(index, 1);
-                        displayFileList();
+                // Move button listeners
+                elements.fileList
+                    .querySelectorAll(".move-up")
+                    .forEach((button, index) => {
+                        button.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            if (!button.disabled) moveFile(index, index - 1);
+                        });
                     });
-                });
-            }
 
-            function addMoveButtonListeners() {
-                // Up buttons
-                const upButtons = fileList.querySelectorAll(".move-up");
-                upButtons.forEach((button) => {
-                    button.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        if (!button.disabled) {
+                elements.fileList
+                    .querySelectorAll(".move-down")
+                    .forEach((button, index) => {
+                        button.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            if (!button.disabled) moveFile(index, index + 1);
+                        });
+                    });
+
+                // Remove button listeners
+                elements.fileList
+                    .querySelectorAll(".remove-file")
+                    .forEach((button) => {
+                        button.addEventListener("click", (e) => {
+                            e.stopPropagation();
                             const index = parseInt(button.dataset.index);
-                            moveFileUp(index);
-                        }
+                            selectedFiles.splice(index, 1);
+                            displayFileList();
+                        });
                     });
-                });
+            };
 
-                // Down buttons
-                const downButtons = fileList.querySelectorAll(".move-down");
-                downButtons.forEach((button) => {
-                    button.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        if (!button.disabled) {
-                            const index = parseInt(button.dataset.index);
-                            moveFileDown(index);
-                        }
-                    });
-                });
-            }
-
-            let draggedElement = null;
-
-            function handleDragStart(e) {
+            // Drag and Drop Handlers
+            const handleDragStart = function (e) {
                 draggedElement = this;
                 this.style.opacity = "0.5";
                 this.style.borderColor = "#E66601";
-            }
+            };
 
-            function handleDragOver(e) {
+            const handleDragOver = (e) => {
                 e.preventDefault();
-            }
+            };
 
-            function handleDrop(e) {
+            const handleDrop = function (e) {
                 e.preventDefault();
-
                 if (this !== draggedElement) {
                     const draggedIndex = parseInt(draggedElement.dataset.index);
                     const targetIndex = parseInt(this.dataset.index);
-
-                    // Reorder the files array
-                    const draggedFile = selectedFiles[draggedIndex];
-                    selectedFiles.splice(draggedIndex, 1);
-                    selectedFiles.splice(targetIndex, 0, draggedFile);
-
-                    displayFileList();
+                    moveFile(draggedIndex, targetIndex);
                 }
-            }
+            };
 
-            function handleDragEnd(e) {
+            const handleDragEnd = function (e) {
                 this.style.opacity = "";
                 this.style.borderColor = "";
                 draggedElement = null;
-            }
+            };
 
-            // Handle file input change
-            input.addEventListener("change", function (e) {
-                // Add new files to existing selection instead of replacing
+            // PDF Generation
+            const generatePdf = async () => {
+                if (selectedFiles.length === 0) {
+                    alert("Please select some files first!");
+                    return;
+                }
+
+                cleanupPreviousPdf();
+                elements.fileForm.style.display = "none";
+                elements.loading.style.display = "block";
+                elements.downloadSection.style.display = "none";
+
+                try {
+                    const files = await Promise.all(
+                        selectedFiles.map(async (file) => ({
+                            name: file.name,
+                            content: new Uint8Array(
+                                await readFileAsArrayBuffer(file),
+                            ),
+                        })),
+                    );
+
+                    const processedFiles = await Magick.Call(files, [
+                        "convert",
+                        "*",
+                        "output.pdf",
+                    ]);
+
+                    currentPdfBlob = processedFiles[0]["blob"];
+                    currentPdfUrl = URL.createObjectURL(currentPdfBlob);
+
+                    elements.iframe.src = currentPdfUrl;
+                    elements.previewSection.style.display = "block";
+                    elements.downloadSection.style.display = "block";
+                } catch (error) {
+                    console.error(error);
+                    alert("Error generating PDF: " + error.message);
+                }
+
+                elements.loading.style.display = "none";
+                elements.fileForm.style.display = "none";
+            };
+
+            // Event Listeners
+            elements.input.addEventListener("change", async (e) => {
                 const newFiles = Array.from(e.target.files);
                 selectedFiles = [...selectedFiles, ...newFiles];
                 displayFileList();
-                // Clear the input so same files can be added again if needed
                 e.target.value = "";
             });
 
-            // Add More Files button
-            addMoreBtn.addEventListener("click", function () {
-                input.click();
-            });
+            elements.addMoreBtn.addEventListener("click", () =>
+                elements.input.click(),
+            );
 
-            // Clear all files
-            clearFilesBtn.addEventListener("click", function () {
-                selectedFiles = [];
-                input.value = "";
-                displayFileList();
-            });
+            // elements.clearFilesBtn.addEventListener("click", () => {
+            //     selectedFiles = [];
+            //     elements.input.value = "";
+            //     displayFileList();
+            // });
 
-            // New conversion button
-            newConversionBtn.addEventListener("click", function () {
+            elements.newConversionBtn.addEventListener("click", () => {
                 selectedFiles = [];
-                input.value = "";
-                downloadSection.style.display = "none";
-                iframe.style.display = "none";
+                elements.input.value = "";
+                elements.downloadSection.style.display = "none";
+                elements.previewSection.style.display = "none";
                 cleanupPreviousPdf();
                 displayFileList();
             });
 
-            // Download button
-            downloadBtn.addEventListener("click", function () {
+            elements.downloadBtn.addEventListener("click", () => {
                 if (currentPdfBlob && currentPdfUrl) {
                     const link = document.createElement("a");
                     link.href = currentPdfUrl;
                     link.download = "converted-images.pdf";
-
-                    // For mobile compatibility
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 }
             });
 
-            async function generatePdf() {
-                if (selectedFiles.length === 0) {
-                    alert("Please select some files first!");
-                    return;
-                }
-
-                // Clean up any previous PDF
-                cleanupPreviousPdf();
-
-                fileForm.style.display = "none";
-                loading.style.display = "block";
-                downloadSection.style.display = "none";
-                iframe.style.display = "none";
-
-                try {
-                    let files = [];
-                    console.log("Read started");
-
-                    // Use the reordered selectedFiles array instead of input.files
-                    for (let i = 0; i < selectedFiles.length; i++) {
-                        let content = await readUploadedFileAsText(
-                            selectedFiles[i],
-                        );
-                        let sourceBytes = new Uint8Array(content);
-                        let file = {
-                            name: selectedFiles[i].name,
-                            content: sourceBytes,
-                        };
-                        files.push(file);
-                    }
-                    console.log("Read ended");
-
-                    const command = ["convert", "*", "output.pdf"];
-                    console.log("Call started");
-                    let processedFiles = await Magick.Call(files, command);
-                    console.log("Call ended");
-
-                    // Store the blob and create URL for download
-                    currentPdfBlob = processedFiles[0]["blob"];
-                    currentPdfUrl = URL.createObjectURL(currentPdfBlob);
-                    previewSection.style.display = "block";
-                    // Display PDF in iframe
-                    iframe.style.display = "block";
-                    iframe.setAttribute("src", currentPdfUrl);
-
-                    // Show download section
-                    downloadSection.style.display = "block";
-                } catch (error) {
-                    console.error(error);
-                    alert("Error generating PDF: " + error.message);
-                }
-                loading.style.display = "none";
-                fileForm.style.display = "none";
-            }
-
-            var fileCatcher = document.getElementById("file-catcher");
-            fileCatcher.addEventListener("submit", function (evnt) {
-                evnt.preventDefault();
+            elements.fileForm.addEventListener("submit", (e) => {
+                e.preventDefault();
                 generatePdf();
             });
 
-            // Cleanup on page unload
-            window.addEventListener("beforeunload", function () {
-                cleanupPreviousPdf();
-            });
+            window.addEventListener("beforeunload", cleanupPreviousPdf);
         </script>
 
         <footer class="text-center">
-            <span class="text-sm text-text-subtle"
-                >© 2023
+            <span class="text-sm text-text-subtle">
+                © 2025
                 <a
                     href="https://mevlyshkin.com/"
                     class="hover:underline hover:text-myorange transition duration-200"
-                    >Mev Lyshkin™</a
-                >. All Rights Reserved.
+                >
+                    Mev Lyshkin™
+                </a>
+                . All Rights Reserved.
             </span>
         </footer>
     </body>
